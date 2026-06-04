@@ -911,5 +911,58 @@
     }, { passive: true });
   </script>
 
+  <!-- ════════════════════════════════════════
+       CHATBASE — AI chatbot widget
+       - Self-contained inline loader (most reliable)
+       - Auto-opens 5 seconds after page load
+       - Bubble scaled down to 75% via CSS
+  ════════════════════════════════════════ -->
+
+  <!-- Scale down the chat bubble -->
+  <style>
+    #chatbase-bubble-button {
+      transform: scale(0.75) !important;
+      transform-origin: bottom right !important;
+    }
+  </style>
+
+  <!-- Inline Chatbase loader — no defer, no external config needed -->
+  <script>
+    (function () {
+      if (!window.chatbase || window.chatbase("getState") !== "initialized") {
+        window.chatbase = function () {
+          if (!window.chatbase.q) { window.chatbase.q = []; }
+          window.chatbase.q.push(arguments);
+        };
+        window.chatbase = new Proxy(window.chatbase, {
+          get: function (t, e) {
+            if (e === "q") { return t.q; }
+            return function () {
+              var args = Array.prototype.slice.call(arguments);
+              args.unshift(e);
+              t.apply(this, args);
+            };
+          }
+        });
+      }
+      var s = document.createElement("script");
+      s.type  = "text/javascript";
+      s.async = true;
+      s.src   = "https://www.chatbase.co/embed.min.js";
+      s.id    = "t441LKZzBpaYbWXG9yfjB";
+      s.setAttribute("chatbotId", "t441LKZzBpaYbWXG9yfjB");
+      document.head.appendChild(s);
+    })();
+
+    // Auto-open the chatbot 5 seconds after page load
+    window.addEventListener("load", function () {
+      setTimeout(function () {
+        if (window.chatbase && typeof window.chatbase === "function") {
+          window.chatbase("open");
+        }
+      }, 5000);
+    });
+  </script>
+
 </body>
 </html>
